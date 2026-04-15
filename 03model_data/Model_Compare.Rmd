@@ -1,0 +1,51 @@
+---
+title: "model_compare"
+author: "lzt"
+date: "2025-06-08"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r Package}
+#rm(list=ls())
+require("knitr") 
+opts_chunk$set(tidy = FALSE, warning = FALSE, message = FALSE, cache = FALSE)
+suppressMessages(library("openintro"))
+suppressMessages(library("tidyverse"))
+suppressMessages(library("ggplot2")) # for plotting.
+suppressMessages(library("ggpubr")) # using the ggexport
+suppressMessages(library('loo'))   # for calculating looic and waic
+source("./supp_funcs/func05_printfit.R") #print looic and waic of the model and their weights:   no change needed
+source("./supp_funcs/func04_extract_ic.R") #extract looic and waic of the model:                 no chnage needed
+# install.packages("ggplot2")    # 安装 ggplot2 包
+# install.packages("gridExtra")  # 安装 gridExtra 包
+# install.packages("grid")      # 安装 grid 包
+# install.packages("extrafont")
+library(extrafont)
+# font_import()   # 可能需要几分钟
+# loadfonts(device = "win")
+library(gridExtra)
+```
+
+1. load models to compute weights
+```{r load models to compute weights}
+load('./stan_output/fit_m1.RData')
+load('./stan_output/fit_m2.RData')
+load('./stan_output/fit_m3.RData')
+load('./stan_output/fit_m4.RData')
+
+score_table <- printFit(fit_m1c,fit_m2g,fit_m3g,fit_m4g,ic="both")
+names(score_table) <- c('LOOIC','WAIC','LOOIC_w','WAIC_w')
+score_table
+
+write.csv(score_table,file='7LOOIC_WAIC_weights.csv',row.names = F)
+
+```
+
+
+
+
+
